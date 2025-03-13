@@ -2,14 +2,10 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.util.ArrayList;
-import java.util.List;
-
-//Переделать recIntegral чтобы все поля были private сделать get и set (set -> result)
-//Убрать backup
 
 public class Main {
     // Список для хранения данных
-    private static final List<recIntegral> line = new ArrayList<>();
+    private static final ArrayList<recIntegral> line = new ArrayList<>();
 
     public static void main(String[] args) {
         JFrame frame = new JFrame("Калькулятор");
@@ -67,7 +63,6 @@ public class Main {
         deleteButton.addActionListener(e -> {
             int selectedRow = table.getSelectedRow();
             if (selectedRow != -1) {
-                //line.remove(selectedRow); // Просто удаляем из основной коллекции
                 tableModel.removeRow(selectedRow); // Удаляем из таблицы
             }
         });
@@ -78,8 +73,8 @@ public class Main {
             if (selectedRow != -1) {
                 try {
                     recIntegral record = line.get(selectedRow);
-                    record.result = computeIntegral(record.lowerBound, record.upperBound, record.step);
-                    tableModel.setValueAt(record.result, selectedRow, 3);
+                    record.setResult(record.computeIntegral());
+                    tableModel.setValueAt(record.getResult(), selectedRow, 3);
                 } catch (Exception ex) {
                     JOptionPane.showMessageDialog(frame, "Calculation error", "Error", JOptionPane.ERROR_MESSAGE);
                 }
@@ -93,11 +88,11 @@ public class Main {
         // Заполнение таблицы из коллекции и восстановление удалённых данных
         fillButton.addActionListener(e -> {
             tableModel.setRowCount(0); // Очистить таблицу перед добавлением данных
-            System.out.println("Filling table from collection... Total records: " + line.size());
+            //System.out.println("Filling table from collection... Total records: " + line.size());
 
             // Заполняем таблицу текущими данными
             for (recIntegral record : line) {
-                tableModel.addRow(new Object[]{record.lowerBound, record.upperBound, record.step, record.result});
+                tableModel.addRow(new Object[]{record.getLowerBound(), record.getUpperBound(), record.getStep(), record.getResult()});
             }
         });
 
@@ -108,18 +103,5 @@ public class Main {
         frame.add(tableScrollPane, BorderLayout.SOUTH);
 
         frame.setVisible(true);
-    }
-
-    // Метод для вычисления интеграла
-    public static double computeIntegral(double LowLim, double UpLim, double step) {
-        double start, h;
-        double sumS = 0;
-        start = LowLim;
-        do {
-            h = Math.min(step, (UpLim - start));
-            sumS += h * 0.5 * (Math.cos(start) + Math.cos(start + h));
-            start += h;
-        } while (start < UpLim);
-        return sumS;
     }
 }
