@@ -8,7 +8,7 @@ public class Main {
     public static void main(String[] args) {
         // Создаём окно
         JFrame frame = new JFrame("Integral Calculator");
-        frame.setSize(1000, 700);
+        frame.setSize(1000, 800);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLayout(new BorderLayout());
 
